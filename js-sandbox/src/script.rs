@@ -171,13 +171,15 @@ impl Script {
 	{
 		let ext = Extension {
 			ops: Cow::Owned(vec![op_return::DECL]),
-			deno_web::init(BlobStore::default(), None),
 			..Default::default()
 		};
 
 		let mut runtime = JsRuntime::new(deno_core::RuntimeOptions {
 			module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
-			extensions: vec![ext],
+			extensions: vec![
+				deno_web::init(BlobStore::default(), None),
+				ext
+			],
 			..Default::default()
 		});
 
