@@ -11,6 +11,17 @@ use serde::de::DeserializeOwned;
 
 use crate::{AnyError, CallArgs, JsError, JsValue};
 
+#[derive(Clone)]
+struct DenoTimerPermission;
+impl deno_web::TimersPermission for DenoTimerPermission {
+	fn allow_hrtime(&mut self) -> bool {
+	  false
+	}
+	fn check_unstable(&self, _state: &OpState, _api_name: &'static str) {
+	  unreachable!()
+	}
+}
+
 pub trait JsApi<'a> {
 	/// Generate an API from a script
 	fn from_script(script: &'a mut Script) -> Self
@@ -177,7 +188,7 @@ impl Script {
 		let mut runtime = JsRuntime::new(deno_core::RuntimeOptions {
 			module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
 			extensions: vec![
-				deno_web::deno_web::init_ops_and_esm::<deno_web::TimersPermission>(BlobStore::default(), None),
+				deno_web::deno_web::init_ops_and_esm::<DenoTimerPermission>(Default::default(), None),
 				ext
 			],
 			..Default::default()
