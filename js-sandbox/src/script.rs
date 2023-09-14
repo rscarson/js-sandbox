@@ -6,7 +6,7 @@ use std::rc::Rc;
 use std::{thread, time::Duration};
 
 use deno_core::{op, FastString, JsBuffer, JsRuntime, Op, OpState};
-use deno_web::{deno_web, TimersPermission};
+use deno_web::TimersPermission;
 use serde::de::DeserializeOwned;
 
 use crate::{AnyError, CallArgs, JsError, JsValue};
@@ -189,7 +189,7 @@ impl Script {
 		let mut runtime = JsRuntime::new(deno_core::RuntimeOptions {
 			module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
 			extensions: vec![
-				deno_web::init_ops_and_esm::<DenoTimerPermission>(Default::default(), None),
+				deno_web::deno_web::init_ops_and_esm::<DenoTimerPermission>(Default::default(), None),
 				ext
 			],
 			..Default::default()
