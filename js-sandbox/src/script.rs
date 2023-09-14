@@ -177,7 +177,7 @@ impl Script {
 		let mut runtime = JsRuntime::new(deno_core::RuntimeOptions {
 			module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
 			extensions: vec![
-				deno_web::init(BlobStore::default(), None),
+				deno_web::deno_web::init_ops_and_esm::<deno_web::TimersPermission>(BlobStore::default(), None),
 				ext
 			],
 			..Default::default()
