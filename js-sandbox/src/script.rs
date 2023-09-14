@@ -17,7 +17,7 @@ impl deno_web::TimersPermission for DenoTimerPermission {
 	fn allow_hrtime(&mut self) -> bool {
 	  false
 	}
-	fn check_unstable(&self, _state: &OpState, _api_name: &'static str) {
+	fn check_unstable(&self, _state: &deno_core::ops::OpState, _api_name: &'static str) {
 	  unreachable!()
 	}
 }
