@@ -6,7 +6,7 @@ use std::rc::Rc;
 use std::{thread, time::Duration};
 
 use deno_core::{op, FastString, JsBuffer, JsRuntime, Op, OpState};
-use deno_web::deno_web;
+use deno_web::{deno_web, TimersPermission};
 use serde::de::DeserializeOwned;
 
 use crate::{AnyError, CallArgs, JsError, JsValue};
