@@ -5,8 +5,8 @@ use std::path::Path;
 use std::rc::Rc;
 use std::{thread, time::Duration};
 
-use deno_core::{op, Extension, FastString, JsBuffer, JsRuntime, Op, OpState};
-use deno_web::BlobStore;
+use deno_core::{op, FastString, JsBuffer, JsRuntime, Op, OpState};
+use deno_web::deno_web;
 use serde::de::DeserializeOwned;
 
 use crate::{AnyError, CallArgs, JsError, JsValue};
@@ -17,7 +17,8 @@ impl deno_web::TimersPermission for DenoTimerPermission {
 	fn allow_hrtime(&mut self) -> bool {
 	  false
 	}
-	fn check_unstable(&self, _state: &deno_core::ops::OpState, _api_name: &'static str) {
+
+	fn check_unstable(&self, _state: &OpState, _api_name: &'static str) {
 	  unreachable!()
 	}
 }
@@ -180,7 +181,7 @@ impl Script {
 	where
 		S: Into<FastString>,
 	{
-		let ext = Extension {
+		let ext = deno_core::Extension {
 			ops: Cow::Owned(vec![op_return::DECL]),
 			..Default::default()
 		};
@@ -188,7 +189,7 @@ impl Script {
 		let mut runtime = JsRuntime::new(deno_core::RuntimeOptions {
 			module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
 			extensions: vec![
-				deno_web::deno_web::init_ops_and_esm::<DenoTimerPermission>(Default::default(), None),
+				deno_web::init_ops_and_esm::<DenoTimerPermission>(Default::default(), None),
 				ext
 			],
 			..Default::default()
