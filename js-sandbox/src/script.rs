@@ -6,6 +6,7 @@ use std::rc::Rc;
 use std::{thread, time::Duration};
 
 use deno_core::{op, Extension, FastString, JsBuffer, JsRuntime, Op, OpState};
+use deno_web::BlobStore;
 use serde::de::DeserializeOwned;
 
 use crate::{AnyError, CallArgs, JsError, JsValue};
@@ -170,6 +171,7 @@ impl Script {
 	{
 		let ext = Extension {
 			ops: Cow::Owned(vec![op_return::DECL]),
+			deno_web::init(BlobStore::default(), None),
 			..Default::default()
 		};
 
