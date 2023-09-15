@@ -53,8 +53,12 @@ impl Script {
 	pub fn from_string(js_code: &str) -> Result<Self, JsError> {
 		// console.log() is not available by default -- add the most basic version with single argument (and no warn/info/... variants)
 		let all_code =
-			"const console = { log: function(expr) { Deno.core.print(expr + '\\n', false); } };"
-				.to_string() + js_code;
+			"
+				const console = { 
+					log: function(expr) { Deno.core.print(expr + '\\n', false); },
+					error: function(expr) { Deno.core.print(expr + '\\n', false); },
+				};
+			".to_string() + js_code;
 
 		Self::create_script(all_code)
 	}
@@ -190,6 +194,7 @@ impl Script {
 		let mut runtime = JsRuntime::new(deno_core::RuntimeOptions {
 			module_loader: Some(Rc::new(deno_core::FsModuleLoader)),
 			extensions: vec![
+				deno_core::extensions::
 				deno_web::init_ops_and_esm::<DenoTimerPermission>(Default::default(), None),
 				ext
 			],
